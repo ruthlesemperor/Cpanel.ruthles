@@ -18,23 +18,264 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
+      position: relative;
     }
-
     @keyframes bgMove {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
       100% { background-position: 0% 50%; }
     }
-
-    /* Partikel bintang */
     body::before {
       content: "";
       position: absolute;
       top: 0; left: 0;
       width: 100%; height: 100%;
       background: url('https://www.transparenttextures.com/patterns/stardust.png');
-      opacity: 0.2;
+      opacity: 0.25;
       z-index: 0;
+    }
+    .login-container {
+      position: relative;
+      z-index: 1;
+    }
+    .login-card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 35px;
+      width: 360px;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.4);
+      animation: fadeIn 1.5s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .card-header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .avatar {
+      width: 75px;
+      height: 75px;
+      border-radius: 50%;
+      border: 2px solid cyan;
+      box-shadow: 0 0 15px cyan, 0 0 30px magenta;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, cyan, magenta);
+      -webkit-background-clip: text;
+      color: transparent;
+      font-weight: 700;
+      font-size: 1.4rem;
+      text-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+    .login-subtitle {
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+    .input-group {
+      margin-bottom: 20px;
+    }
+    .input-container {
+      position: relative;
+    }
+    .input-container input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid rgba(0, 255, 255, 0.3);
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.3);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .input-container input:focus {
+      border-color: cyan;
+      box-shadow: 0 0 12px cyan;
+    }
+    .input-container label {
+      position: absolute;
+      top: 50%;
+      left: 12px;
+      transform: translateY(-50%);
+      color: #aaa;
+      pointer-events: none;
+      transition: 0.3s ease;
+    }
+    .input-container input:focus + label,
+    .input-container input:not(:placeholder-shown) + label {
+      top: -10px;
+      left: 8px;
+      font-size: 0.8rem;
+      color: cyan;
+      background: rgba(0,0,0,0.7);
+      padding: 0 5px;
+      border-radius: 5px;
+    }
+    .login-btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      background: linear-gradient(90deg, cyan, magenta);
+      border-radius: 10px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .login-btn:hover {
+      box-shadow: 0 0 20px cyan, 0 0 20px magenta;
+      transform: translateY(-2px);
+    }
+    .btn-loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 3px solid transparent;
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      100% { transform: rotate(360deg); }
+    }
+    .hidden { display: none; }
+    .error-message {
+      color: red;
+      text-align: center;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+    .error-message.show {
+      opacity: 1;
+    }
+    .footer-text {
+      text-align: center;
+      font-size: 0.8rem;
+      margin-top: 15px;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body class="login-page">
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="card-header">
+        <img src="https://img1.pixhost.to/images/6755/615340015_imgtmp.jpg" class="avatar" alt="avatar">
+        <h2 class="login-title">
+          <span class="gradient-text">Login ke Joocode Panel</span>
+        </h2>
+        <p class="login-subtitle">Masukkan detail Pterodactyl Anda</p>
+      </div>
+
+      <form class="login-form" id="loginForm">
+        <div class="input-group">
+          <div class="input-container">
+            <input type="text" id="domain" placeholder=" " required>
+            <label for="domain">Domain Pterodactyl</label>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-container">
+            <input type="password" id="apikey" placeholder=" " required>
+            <label for="apikey">API Key</label>
+          </div>
+        </div>
+
+        <div class="input-group">
+          <div class="input-container">
+            <input type="password" id="capikey" placeholder=" " required>
+            <label for="capikey">Client API Key</label>
+          </div>
+        </div>
+
+        <button type="submit" class="login-btn">
+          <span class="btn-text">Masuk</span>
+          <div class="btn-loader hidden">
+            <div class="spinner"></div>
+          </div>
+        </button>
+      </form>
+
+      <div id="error" class="error-message"></div>
+      
+      <div class="card-footer">
+        <p class="footer-text">© 2025 Joocode Official</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showError(message) {
+      const errorBox = document.getElementById("error");
+      errorBox.textContent = message;
+      errorBox.classList.add('show');
+      setTimeout(() => errorBox.classList.remove('show'), 5000);
+    }
+    function showLoader() {
+      document.querySelector('.login-btn').disabled = true;
+      document.querySelector('.btn-text').classList.add('hidden');
+      document.querySelector('.btn-loader').classList.remove('hidden');
+    }
+    function hideLoader() {
+      document.querySelector('.login-btn').disabled = false;
+      document.querySelector('.btn-text').classList.remove('hidden');
+      document.querySelector('.btn-loader').classList.add('hidden');
+    }
+    async function loginPtero() {
+      const domain = document.getElementById("domain").value.trim();
+      const apikey = document.getElementById("apikey").value.trim();
+      const capikey = document.getElementById("capikey").value.trim();
+      if (!domain || !apikey || !capikey) {
+        showError("Harap isi semua kolom!");
+        return;
+      }
+      showLoader();
+      try {
+        const testResponse = await fetch(`https://${domain}/api/client`, {
+          method: "GET",
+          headers: {
+            "Authorization": `Bearer ${capikey}`,
+            "Accept": "application/json",
+            "Content-Type": "application/json"
+          }
+        });
+        if (!testResponse.ok) {
+          hideLoader();
+          showError("Login gagal! Periksa domain atau API key.");
+          return;
+        }
+        const userData = await testResponse.json();
+        sessionStorage.setItem("ptero_domain", domain);
+        sessionStorage.setItem("ptero_apikey", apikey);
+        sessionStorage.setItem("ptero_capikey", capikey);
+        sessionStorage.setItem("ptero_user", JSON.stringify(userData));
+        window.location.href = "cpanel.html";
+      } catch (error) {
+        hideLoader();
+        showError("Tidak bisa terhubung ke Pterodactyl API!");
+      }
+    }
+    document.getElementById('loginForm').addEventListener('submit', e => {
+      e.preventDefault();
+      loginPtero();
+    });
+  </script>
+</body>
+</html>      z-index: 0;
     }
 
     .login-container {
