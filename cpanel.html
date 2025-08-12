@@ -1,0 +1,319 @@
+<<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Joocode Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="icon" href="https://img1.pixhost.to/images/6755/615340015_imgtmp.jpg" type="image/jpeg">
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle at top, #0a0a0f, #000);
+      color: white;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    .main-header {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      background: rgba(15, 15, 25, 0.9);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(0,255,255,0.3);
+    }
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-image img {
+      height: 50px;
+      border-radius: 50%;
+      box-shadow: 0 0 15px cyan;
+    }
+    .gradient-text {
+      background: linear-gradient(90deg, cyan, magenta);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .logout-btn {
+      background: none;
+      border: 1px solid cyan;
+      padding: 6px 14px;
+      color: cyan;
+      border-radius: 8px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+    .logout-btn:hover {
+      background: cyan;
+      color: black;
+      box-shadow: 0 0 15px cyan;
+    }
+
+    /* HERO SECTION */
+    .hero-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 40px 20px;
+      border-bottom: 1px solid rgba(0,255,255,0.2);
+    }
+    .hero-title {
+      font-size: 2rem;
+    }
+    #typing {
+      font-size: 1.2rem;
+      color: cyan;
+      margin: 8px 0;
+    }
+
+    /* DASHBOARD LAYOUT */
+    .dashboard-container {
+      display: flex;
+      height: calc(100vh - 180px);
+    }
+    .sidebar {
+      width: 220px;
+      background: rgba(20, 20, 30, 0.95);
+      border-right: 1px solid rgba(0,255,255,0.2);
+      padding: 20px 10px;
+    }
+    .nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: none;
+      border: none;
+      color: white;
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .nav-btn.active, .nav-btn:hover {
+      background: rgba(0,255,255,0.1);
+      box-shadow: 0 0 10px cyan;
+    }
+
+    /* MAIN CONTENT */
+    .main-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .content-section { display: none; }
+    .content-section.active { display: block; }
+    .form-container {
+      margin-top: 20px;
+      background: rgba(255,255,255,0.02);
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,255,255,0.3);
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label { display: block; margin-bottom: 6px; }
+    input, select {
+      width: 100%;
+      padding: 8px;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid rgba(0,255,255,0.4);
+      border-radius: 6px;
+      color: white;
+    }
+    .submit-btn {
+      background: cyan;
+      color: black;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: 0.3s;
+    }
+    .submit-btn:hover {
+      box-shadow: 0 0 15px cyan;
+    }
+    .btn-loader.hidden { display: none; }
+    .spinner {
+      border: 3px solid rgba(255,255,255,0.2);
+      border-top: 3px solid cyan;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 0.6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .success-glow {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 6px;
+      background: rgba(0,255,255,0.1);
+      box-shadow: 0 0 15px cyan;
+    }
+    .fade-out { animation: fadeOut 0.6s forwards; }
+    @keyframes fadeOut { to { opacity: 0; transform: scale(0.95); } }
+  </style>
+</head>
+<body class="dashboard-page">
+
+  <!-- HEADER -->
+  <header class="main-header">
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-image">
+          <img src="https://img1.pixhost.to/images/6755/615340015_imgtmp.jpg" alt="logo">
+        </div>
+        <div class="logo-text">
+          <h1 class="gradient-text">Joocode Official</h1>
+          <p class="logo-subtitle">Website Create Panel</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="user-info">
+          <span id="userName"></span>
+        </div>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div>
+      <h2 class="hero-title"><span class="gradient-text">Joocode Official</span></h2>
+      <p id="typing"></p>
+      <p>Digital Developer, Digital Marketplace, IT Engineering</p>
+    </div>
+    <div>
+      <img src="https://img1.pixhost.to/images/6751/615257498_imgtmp.jpg" alt="profile" style="height:120px; border-radius:10px; box-shadow:0 0 15px cyan;">
+    </div>
+  </section>
+
+  <!-- DASHBOARD -->
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <button class="nav-btn active" data-section="create">Create Panel</button>
+      <button class="nav-btn" data-section="list">List Panel</button>
+    </aside>
+
+    <main class="main-content">
+      <section id="create" class="content-section active">
+        <h3>Buat Panel Sekarang</h3>
+        <p>Buat panel pterodactyl dengan mudah dan cepat</p>
+        <div class="form-container">
+          <form id="panelForm" class="modern-form">
+            <div class="form-group">
+              <label for="size">Pilih RAM</label>
+              <select id="size" required>
+                <option value="" disabled selected>Pilih Ram</option>
+                <option value="1gb">1GB</option>
+                <option value="2gb">2GB</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="username">Username Panel</label>
+              <input type="text" id="username" placeholder="Masukkan username" >
+              <input type="email" id="email" placeholder="Masukkan email" required />
+            </div>
+            <button type="submit" class="submit-btn">
+              <span class="btn-text">Buat Sekarang</span>
+              <div class="btn-loader hidden"><div class="spinner"></div></div>
+            </button>
+          </form>
+          <div id="result" class="result-box"></div>
+        </div>
+      </section>
+
+      <section id="list" class="content-section">
+        <h3>Daftar Server Aktif</h3>
+        <p>Kelola semua server panel yang telah dibuat</p>
+        <div id="serverList" class="server-grid">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Memuat daftar server...</p>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const typingText = document.getElementById("typing");
+    const textArray = ["Create Pterodactyl Panel in Seconds...", "Manage Your Servers with Style...", "Joocode - The Future is Now"];
+    let textIndex = 0, charIndex = 0;
+    function typeText() {
+      if (charIndex < textArray[textIndex].length) {
+        typingText.innerHTML += textArray[textIndex].charAt(charIndex);
+        charIndex++;
+        setTimeout(typeText, 80);
+      } else {
+        setTimeout(eraseText, 2000);
+      }
+    }
+    function eraseText() {
+      if (charIndex > 0) {
+        typingText.innerHTML = textArray[textIndex].substring(0, charIndex - 1);
+        charIndex--;
+        setTimeout(eraseText, 40);
+      } else {
+        textIndex = (textIndex + 1) % textArray.length;
+        setTimeout(typeText, 500);
+      }
+    }
+    document.addEventListener("DOMContentLoaded", typeText);
+
+    const navButtons = document.querySelectorAll(".nav-btn");
+    const sections = document.querySelectorAll(".content-section");
+    navButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        navButtons.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        const sectionId = btn.getAttribute("data-section");
+        sections.forEach(sec => {
+          sec.classList.remove("active");
+          if (sec.id === sectionId) sec.classList.add("active");
+        });
+      });
+    });
+
+    document.getElementById("panelForm").addEventListener("submit", e => {
+      e.preventDefault();
+      const btn = e.target.querySelector(".submit-btn");
+      const loader = btn.querySelector(".btn-loader");
+      const btnText = btn.querySelector(".btn-text");
+      const resultBox = document.getElementById("result");
+      btnText.style.opacity = "0";
+      loader.classList.remove("hidden");
+      setTimeout(() => {
+        loader.classList.add("hidden");
+        btnText.style.opacity = "1";
+        resultBox.innerHTML = `<div class="success-glow"><h4>✅ Panel Berhasil Dibuat!</h4><p>Silakan cek email Anda untuk detail login.</p></div>`;
+      }, 2000);
+    });
+
+    function logout() {
+      document.body.classList.add("fade-out");
+      setTimeout(() => {
+        alert("Logout Berhasil!");
+      }, 600);
+    }
+  </script>
+</body>
+</html>
